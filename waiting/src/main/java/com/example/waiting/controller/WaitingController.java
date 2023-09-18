@@ -1,10 +1,12 @@
 package com.example.waiting.controller;
 
+import com.example.waiting.config.MemberTokenInfo;
 import com.example.waiting.domain.request.WaitingRequest;
 import com.example.waiting.domain.request.WaitingUpdateRequest;
 import com.example.waiting.domain.response.WaitingResponse;
 import com.example.waiting.service.WaitingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,9 +22,18 @@ public class WaitingController {
     public List<WaitingResponse> getAll() {
         return waitingService.getAll();
     }
+
+    @GetMapping("/status")
+    public List<WaitingResponse> getAllByStatus(@AuthenticationPrincipal MemberTokenInfo memberTokenInfo) {
+        return waitingService.getAllByStatus(memberTokenInfo);
+    }
     @PostMapping("{storeId}")
-    public void save(@PathVariable("storeId") String storeId, @RequestBody WaitingRequest waitingRequest) {
-        waitingService.save(storeId, waitingRequest);
+    public void save(
+            @AuthenticationPrincipal MemberTokenInfo memberTokenInfo,
+            @PathVariable("storeId") String storeId,
+            @RequestBody WaitingRequest waitingRequest
+    ) {
+        waitingService.save(storeId, memberTokenInfo, waitingRequest);
     }
 
     @DeleteMapping("{id}")
@@ -30,14 +41,16 @@ public class WaitingController {
         waitingService.delete(id);
     }
 
-    @GetMapping("/id")
-    public List<Long> findByWaiting(@RequestParam(name = "id") Long id) {
-        return waitingService.findByWaiting(id);
+
+    @GetMapping("/{storeId}")
+    public List<Long> getByWaiting(@PathVariable("storeId") UUID storeId){
+        return waitingService.findByWaiting(storeId);
     }
+
 
     @PutMapping("{storeId}/{status}")
     public WaitingResponse statusUpdate(
-            @PathVariable("storeId") String storeId,
+            @PathVariable("storeId") UUID storeId,
             @PathVariable("status") String status
             ) {
         return waitingService.statusUpdate(storeId,status);

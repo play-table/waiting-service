@@ -10,19 +10,16 @@ import java.util.UUID;
 public class WaitingRequest {
     private Integer adult;
     private Integer kid;
-    private Integer total;
     private String storeId;
-    private String customerId;
-    private String customerName;
     private String status;
 
-    public Waiting toEntity(String storeId) {
+    public Waiting toEntity(String storeId,UUID customerId, String customerName) {
         return Waiting.builder()
                 .adult(adult)
                 .kid(kid)
                 .total(adult+kid)
                 .storeId(UUID.fromString(storeId))
-                .customerId(UUID.fromString(customerId))
+                .customerId(customerId)
                 .customerName(customerName)
                 .status(WaitingStatus.valueOf(status))
                 .build();
