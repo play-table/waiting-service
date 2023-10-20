@@ -1,8 +1,10 @@
 package com.example.waiting.controller;
 
 import com.example.waiting.config.MemberTokenInfo;
+import com.example.waiting.domain.request.WaitingHistoryRequest;
 import com.example.waiting.domain.request.WaitingRequest;
 import com.example.waiting.domain.request.WaitingUpdateRequest;
+import com.example.waiting.domain.response.WaitingHistoryResponse;
 import com.example.waiting.domain.response.WaitingResponse;
 import com.example.waiting.service.WaitingService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,16 @@ public class WaitingController {
     public List<WaitingResponse> getAllByStatus(@AuthenticationPrincipal MemberTokenInfo memberTokenInfo) {
         return waitingService.getAllByStatus(memberTokenInfo);
     }
+
+    @PostMapping("/history/{storeId}")
+    public void saveHistory(
+            @AuthenticationPrincipal MemberTokenInfo memberTokenInfo,
+            @PathVariable("storeId") String storeId,
+            @RequestBody WaitingHistoryRequest waitingHistoryRequest
+            ) {
+       waitingService.saveHistory(storeId,memberTokenInfo,waitingHistoryRequest);
+    }
+
     @PostMapping("{storeId}")
     public void save(
             @AuthenticationPrincipal MemberTokenInfo memberTokenInfo,
@@ -38,7 +50,7 @@ public class WaitingController {
 
     @DeleteMapping("{id}")
     public void delete(@PathVariable("id") Long id) {
-        waitingService.delete(id);
+        waitingService.delete(id,"RESTAURANT_CANCEL");
     }
 
 

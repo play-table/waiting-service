@@ -8,27 +8,18 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
-@Table(name = "waiting")
+@Table(name = "waitingHistory")
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
-public class Waiting {
+public class WaitingHistory {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Integer adult;
-    private Integer kid;
-    private Integer total;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     private UUID storeId;
     private UUID customerId;
     private String customerName;
-    @Enumerated(EnumType.STRING)
-    private WaitingStatus status;
-
-    public void statusUpdate(WaitingStatus status) {
-        this.status = status;
-    }
-
+    private Integer total;
 }
